@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="Test_redips_jsContext-Web.config Connection String" description="Test_redips_jsContext 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-Test_redips_js;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\Test_redips_js.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Kevin\ Lai\\Documents\\LOGIN\\Test_REDIPS\\Test_redips_js\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='Test_redips_jsContext']/@connectionString" />
+  </parameter>
+</parameters>

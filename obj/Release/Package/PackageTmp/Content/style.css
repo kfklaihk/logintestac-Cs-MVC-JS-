@@ -1,0 +1,155 @@
+/*
+Darko Bunic
+http://www.redips.net/
+Jan, 2010.
+*/
+
+body {
+	font-family: arial;
+}
+
+table {
+    width: 100%;
+}
+
+/* add bottom margin between tables */
+#table1, #table2 {
+    margin-bottom: 20px;
+}
+
+.btncell0 {
+    width: 0%;
+}
+
+.btncell {
+    width: 15%;
+}
+
+.stagecell {
+    width: 15%;
+}
+
+.deletecell {
+    width: 6%;
+}
+
+.dragcell {
+    width: 4%;
+}
+
+
+/* drag container (contains two tables) */
+#redips-drag {
+	margin: auto;
+	width: 100%;
+}
+
+/* drag objects (DIV inside table cells) */
+.redips-drag {
+	position: relative;
+	cursor: move;
+	margin: 2px auto;
+	z-index: 10;
+	background-color: #f0f0f0;
+	text-align: left;
+	padding: 5px;
+	font-size: 12px;
+	width: 190px;
+	/* round corners for FF, Chrome, Safari (except IE) */
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	/* shadow for FF, Chrome, Safari (except IE)*/
+	/*
+	-moz-box-shadow: 4px 4px 8px #444;
+	-webkit-box-shadow: 4px 4px 8px #444;
+	box-shadow: 4px 4px 8px #444;
+	*/
+}
+
+/* drag objects border for the first table */
+.t1 {
+	border: 1px solid #9B9EA2;;
+}
+
+/* tables */
+div#redips-drag table {
+	background-color: #e0e0e0;
+	border-collapse: collapse;
+}
+
+/* table cells */
+div#redips-drag td {
+	height: 50px;
+	border: 1px solid white;
+	text-align: center;
+	font-size: 12px;
+	padding: 2px;
+}
+
+/* message cell (marked as forbidden) */
+.redips-mark {
+	color: white;
+	background-color: SteelBlue;
+}
+
+/* trash cell */
+.redips-trash {
+	color: white;
+	background-color: SteelBlue;
+}
+
+/*--------------*/
+
+
+/* blue DIV elements */
+.blue {
+	border-color: SteelBlue;
+						 
+					
+				 
+			  
+}
+
+/* orange DIV elements */
+.orange {
+	border-color: #FF8A58;
+}
+
+/* DIV row handlers (blue left column) */
+.redips-row {
+	width: 20px;
+	margin: 2px;
+	border-color: SteelBlue;
+	background-color: SteelBlue;
+	/* round corners */
+	border-radius: 14px; /* Opera, Chrome */
+	-moz-border-radius: 14px; /* FF */
+}
+
+/* row handler TD background color */
+.redips-rowhandler {
+	background-color: #76ACDA;
+}
+
+/* marked cells (forbidden access for header and message line) */
+.redips-mark {
+	color: white;
+	background-color: #aaa;
+	text-align: center;
+}
+
+/* row dark */
+.rd {
+	background-color: #ddd;
+}
+
+/* row light */
+.rl {
+	background-color: #eee;
+}
+
+/* cell dark */
+.cdark {
+	background-color: #C6C8CB;
+}

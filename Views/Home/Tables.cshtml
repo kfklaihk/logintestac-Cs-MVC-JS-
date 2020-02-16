@@ -1,0 +1,76 @@
+﻿
+@model System.Data.DataTable
+@using System.Data;
+@{
+
+    var wkflow = ViewBag.wkflow;
+    var ndoc = ViewBag.ndoc;
+
+}
+<link rel="stylesheet" href="~/Content/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+<title>Show Table</title>
+
+
+@using (Html.BeginForm("Tables", "Home", FormMethod.Get, new { id = "ShowTables" }))
+{
+    <select name="s">
+        <option value="dbo.AW_master">dbo.AW_master</option>
+        <option value="dbo.AW_button_master">dbo.AW_button_master</option>
+        <option value="dbo.AW_button_detail">dbo.AW_button_detail</option>
+        <option value="dbo.AW_history_master">dbo.AW_history_master</option>
+        <option value="dbo.AW_history_detail">dbo.AW_history_detail</option>
+        <option value="dbo.AW_document_type">dbo.AW_document_type</option>
+        <option value="dbo.Group_Master">dbo.Group_Master</option>
+    </select>
+    <input type="submit" value="Show">
+}
+<p>--------------------------------------------------------------------------</p>
+<a href="/Home/Index">
+    Return to Index
+</a>
+
+<script type="text/javascript">
+    $(document).on('click', "#ret_test", function () {
+
+        $("#id_ndoc").val("@ndoc");
+        $("#id_wkflow").val("@wkflow");
+        $("#Test").submit();
+
+    });
+</script>
+
+@using (Html.BeginForm("Test", "Home", FormMethod.Get, new { id = "Test" }))
+{
+    <p>Press to return to Approval Workflow Table</p>
+    <input type="button" id="ret_test" value="Return to Flow Table Screen"><br />
+    <input type="hidden" id="id_ndoc"
+           name="ndoc" />
+    <input type="hidden" id="id_wkflow"
+           name="wkflow" />
+}
+
+<table border="1">
+    <thead>
+        <tr>
+            @foreach (DataColumn col in Model.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow row in Model.Rows)
+        {
+            <tr>
+                @foreach (DataColumn col in Model.Columns)
+                {
+                    <td>@row[col.ColumnName]</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+

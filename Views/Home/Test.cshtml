@@ -1,0 +1,569 @@
+﻿<script type="text/javascript">
+    var stglist = '@(ViewBag.data)';
+    stglist = stglist.replace(/&nbsp;/g, ' ');
+    stglist = stglist.replace(/&lt;/g, '<');
+    stglist = stglist.replace(/&gt;/g, '>');
+
+    var doclist = '@(ViewBag.data_d)';
+    doclist = doclist.replace(/&nbsp;/g, ' ');
+    doclist = doclist.replace(/&lt;/g, '<');
+    doclist = doclist.replace(/&gt;/g, '>');
+
+    var grplist = '@(ViewBag.data_g)';
+    grplist = grplist.replace(/&nbsp;/g, ' ');
+    grplist = grplist.replace(/&lt;/g, '<');
+    grplist = grplist.replace(/&gt;/g, '>');
+
+    var statuslist = "<select name='nstatus'><option value='Cancel'>Cancel</option><option value='Completed'>Completed</option></select>";
+    var wkflow_ = '@(ViewBag.wkflow)';
+    var ndoc_ = '@(ViewBag.ndoc)';
+</script>
+@{
+    var t_wkflow_ = ViewBag.wkflow;
+    var t_ndoc_ = ViewBag.ndoc;
+    var t_doc_name_ = ViewBag.doc_name;
+  
+        var msg = TempData["msg"] ?? string.Empty;
+   
+}
+
+<link rel="stylesheet" href="~/Content/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/redips-drag-min.js"></script>
+<script type="text/javascript" src="~/Scripts/script.js"></script>
+<title>Stage and Button</title>
+
+<!-- tables inside this DIV could have draggable content -->
+<script type="text/javascript">
+    var message = '@msg';
+    if(message)
+        alert(message);
+</script>
+
+
+<script type="text/javascript">
+    var save_fcn_s = function () {
+
+        var stgname_json;
+
+        var tmp = [];
+        var r;
+        $("tr.stg").each(function () {
+            r = $(this).find("td.stage").html();
+            if (tmp.includes(r) == false) {
+                tmp.push(r);
+            }
+        });
+
+
+        stgname_json = JSON.stringify(tmp);
+
+
+        $("#savetable_stage").val(stgname_json);
+
+        $("#savestage").submit();
+
+    }
+
+    var save_fcn_s_b = function () {
+
+        var stgname_json;
+
+        var tmp = [];
+        var r;
+        $("tr.stg").each(function () {
+            r = $(this).find("td.stage").html();
+            if (tmp.includes(r) == false) {
+                tmp.push(r);
+            }
+        });
+
+
+        stgname_json = JSON.stringify(tmp);
+
+        var btntext = save('json');
+
+        $("#savetable_stage_all").val(stgname_json);
+        $("#savetable_btn_all").val(btntext);
+        $("#savetable_ndoc").val(ndoc_);
+        $("#savetable_wkflow").val(wkflow_);
+        $("#saverefresh").submit();
+
+
+
+
+    }
+
+    var save_fcn_s_b_js = function () {
+
+        var stgname_json;
+
+        var tmp = [];
+        var r;
+        $("tr.stg").each(function () {
+            r = $(this).find("td.stage").html();
+            if (tmp.includes(r) == false) {
+                tmp.push(r);
+            }
+        });
+
+
+        stgname_json = JSON.stringify(tmp);
+
+        var btntext = save('json');
+        $.get("/Home/SaveTable_stage_button?s=" + stgname_json + "&p=" + btntext);
+
+
+
+    }
+
+
+    var save_fcn_s_js = function () {
+
+        var stgname_json;
+
+        var tmp = [];
+        var r;
+        $("tr.stg").each(function () {
+            r = $(this).find("td.stage").html();
+            if (tmp.includes(r) == false) {
+                tmp.push(r);
+            }
+        });
+
+
+        stgname_json = JSON.stringify(tmp);
+
+        REDIPS.drag.ajaxCall("/Home/SaveTable_stage?s=" + stgname_json);
+
+    }
+
+
+
+    var save_fcn_b = function () {
+
+
+        var btntext = save('json');
+        $.get("/Home/SaveTable_btn?p=" + btntext);
+
+    }
+
+    var save_fcn_b_js = function (row_, col_, class_name, id_) {
+        if (class_name.indexOf("cid-1") > -1) {
+            $("button").prop('disabled', true);
+            $(".redips-drag").prop('disabled', true);
+            $("body").css("cursor", "progress");
+            $.ajax({
+                url: "/Home/SaveTable_btn?wkflow=" + wkflow_ + "&ndoc=" + ndoc_ + "&r=" + row_ + "&co=" + col_ + "&classtext=" + class_name + "&id=" + id_,
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: function (data) {
+                    alert("Save New Button Completed");
+                    var s = data.split("_");
+                    let r = document.getElementById(s[1]);
+                       r.classList.remove("cid-1");
+                    r.classList.add(s[0]);
+
+                    $("body").css("cursor", "default");
+                    $("button").removeAttr("disabled");
+                    $(".redips-drag").removeAttr("disabled");
+                }
+            });
+            
+        }
+    }
+
+
+    $(document).on('mouseover', "div.btn", function () {
+        $(this).css("background-color", "yellow");
+        var nextstg = parseInt($(this).closest('div').attr('class').split(" ")[3].replace("nextstg", ""));
+
+        $('#stg_' + nextstg.toString()).css("background-color", "yellow");
+
+    });
+
+    $(document).on('mouseout', "div.btn", function () {
+        $(this).css("background-color", "#e0e0e0");
+        var nextstg = parseInt($(this).closest('div').attr('class').split(" ")[3].replace("nextstg", ""));
+
+        $('#stg_' + nextstg.toString()).css("background-color", "#e0e0e0");
+
+    });
+
+    $(document).on('mouseover', "td.stage", function () {
+        $(this).css("background-color", "green");
+
+        var nextstg = parseInt($(this).attr("id").replace("stg_", ""));
+        $('div.nextstg' + nextstg.toString()).css("background-color", "green");
+
+    });
+
+
+    $(document).on('mouseout', "td.stage", function () {
+        $(this).css("background-color", "#e0e0e0");
+        var nextstg = parseInt($(this).attr("id").replace("stg_", ""));
+        $('div.nextstg' + nextstg.toString()).css("background-color", "#e0e0e0");
+
+    });
+
+    $(document).on('mouseover', "td.row_1", function () {
+        $(this).css("background-color", "green");
+
+        $('div.nextstg-1').css("background-color", "green");
+
+    });
+
+    $(document).on('mouseout', "td.row_1", function () {
+        $(this).css("background-color", "#e0e0e0");
+
+
+        $('div.nextstg-1').css("background-color", "#e0e0e0");
+    });
+
+
+
+    $(document).on('click', "td.stage", function () {
+        $("#hr").val($(this).closest('tr').index().toString());
+        $("#d1_ndoc").val(ndoc_);
+        $("#d1_wkflow").val(wkflow_);
+        $("#dialog-form").dialog("open");
+
+    });
+
+
+
+
+    $(document).on('click', "div.btn", function () {
+        var tdid = $(this).closest('div').attr('class').split(" ")[4];
+        var b_tdid = tdid.replace("cid", "");
+        if (parseInt(b_tdid) < 0) {
+            alert("Please save whole table first before edit button");
+            return;
+        }
+        $("#abr").val($(this).closest('tr').index().toString());
+        $("#abc").val($(this).closest('td').index().toString());
+        $("#tdid").val(tdid);
+        $("#d2_ndoc").val(ndoc_);
+        $("#d2_wkflow").val(wkflow_);
+        $("#dialog-form-b").dialog("open");
+
+
+    });
+
+    $(document).on('click', "button.deletebtn", function () {
+        $(this).closest('tr').remove();
+
+    });
+
+    $(document).on('mousedown', ".redips-rowhandler", function () {
+
+        REDIPS.drag.init();
+    });
+
+
+    $(document).ready(function () {
+        $("body").css("cursor", "default");
+        $("#doclist").html(doclist);
+        $("#grplist").html(grplist);
+        $("#grplist1").html(grplist);
+        $("#statuslist").html(statuslist);
+        $("#stglist").html(stglist);
+        $("#add_stage").click(function () {
+            event.stopPropagation();
+            var markup = "<tr class='stg' style='background-color: #eee'><td class='redips-rowhandler btn'><div class='redips-drag redips-row'></div></td><td class='redips-mark'><button  class='deletebtn'>Delete</button></td><td class='stage'></td><td></td><td></td><td></td><td></td><td></td></tr>";
+            $("#table1").append(markup);
+
+        });
+
+        $("#save_all").off('click').on('click', function () {
+            event.stopPropagation();
+            $("button").prop('disabled', true);
+            $(".redips-drag").prop('disabled', true);
+            $("body").css("cursor", "progress");
+            save_fcn_s_b();
+            $("button").removeAttr("disabled");
+            $(".redips-drag").removeAttr("disabled");
+        });
+
+        $("#save_history").on('click', function () {
+            event.stopPropagation();
+            $("button").prop('disabled', true);
+            $(".redips-drag").prop('disabled', true);
+            $("body").css("cursor", "progress");
+            $.ajax({
+                url: "/Home/Save_history?wkflow=" + wkflow_ + "&ndoc=" + ndoc_,
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: function (data) {
+                    alert("Save Template Completed");
+
+                    $("body").css("cursor", "default");
+                }
+            });
+            $("button").removeAttr("disabled");
+            $(".redips-drag").removeAttr("disabled");
+
+
+        });
+
+
+        $("#dialog-form").dialog({
+            autoOpen: false,
+            height: 500,
+            width: 600,
+            modal: true,
+            buttons: {
+                OK: function () {
+                    $("#pop_up").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialog-form-b").dialog({
+            autoOpen: false,
+            height: 700,
+            width: 900,
+            modal: true,
+            buttons: {
+                OK: function () {
+                    $("#pop_up_b").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+    });
+</script>
+
+<div id="dialog-form">
+    <form id='pop_up' action='/Home/save_stage_detail' method='get'>
+
+
+        Stage Description: <input type='text' name='sd' /><br />
+        Function Code: <input type='text' name='fc' /><br />
+
+        Group List (Multi-select) : <span id="grplist"></span><br />
+        Status : <span id="statuslist"></span><br />
+        <input type='hidden' id='hr' name='r' />
+        <input type='hidden' id='d1_ndoc' name='ndoc' />
+        <input type='hidden' id='d1_wkflow' name='s' />
+    </form>
+
+</div>
+
+<div id="dialog-form-b">
+    <form id='pop_up_b' action='/Home/save_button_detail' method='get'>
+        Button Text : <input type='text' name='p' /><br />
+
+        Next Stage : <span id="stglist"></span><br />
+        Selection Criteria : <input type='text' name='sc' /><br />
+        Group List (Multi-select) : <span id="grplist1"></span><br />
+
+        After Click Function Code: <input type='text' name='fc' />
+        After click Action: <select name='aca'><option value='1'>Stay</option><option value='2'>Exit</option><option value='3'>Refresh</option></select><br />
+        Confirmation Text : <input type='text' name='ct' />
+        Confirmation : <select name='cbool'><option value='1'>Y</option><option value='2'>N</option></select><br />
+        Remark Text : <input type='text' name='rt' />
+        Remark : <select name='rbool'><option value='1'>Y</option><option value='2'>N</option></select><br />
+        Notification Type: <input type='text' name='nt' /><br />
+        Notification Tasklist Config: <input type='text' name='ntc' /><br />
+        Allow Edit Transaction: <select name='aet'><option value='1'>Y</option><option value='2'>N</option></select> <br />
+        Hide Entry:<select name='he'><option value='1'>Reject</option><option value='2'>Blacklist</option></select><br />
+        Allow Pending : <select name='apbool'><option value='1'>Y</option><option value='2'>N</option></select> <br />
+
+        <input type='hidden' id='abr' name='abr' />
+        <input type='hidden' id='abc' name='abc' />
+        <input type='hidden' id='tdid' name='tdid' />
+        <input type='hidden' id='d2_ndoc' name='ndoc' />
+        <input type='hidden' id='d2_wkflow' name='s' />
+    </form>
+
+</div>
+
+<p>Doc Type:@t_doc_name_</p><br />
+<p>Workflow: @t_wkflow_</p><br />
+<div id="redips-drag">
+
+
+    <table id="table1">
+        <colgroup><col class="dragcell" /><col class="deletecell" /><col class="stagecell" /><col class="btncell" /><col class="btncell" /><col class="btncell" /><col class="btncell" /><col class="btncell" /><col class="btncell0" /><col class="btncell0" /><col class="btncell0" /><col class="btncell0" /><col class="btncell0" /></colgroup>
+        <thead>
+            <tr>
+                <td></td>
+                <td colspan="2"><button id="add_stage">Add Stage</button></td>
+
+                <td><div class="redips-drag t3 redips-clone">Add Button</div></td>
+                <td class="redips-trash">Trash</td>
+                <td></td>
+                <td id="message" class="redips-mark" style="color:transparent;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="redips-mark"></td>
+                <td class="redips-mark" colspan="2">Stages</td>
+
+                <td class="redips-mark">Button 1</td>
+                <td class="redips-mark">Button 2</td>
+                <td class="redips-mark">Button 3</td>
+                <td class="redips-mark">Button 4</td>
+                <td class="redips-mark">Button 5</td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+                <td style="display:none;"></td>
+            </tr>
+            @{
+
+
+                var z = 1;
+
+
+            }
+            @foreach (var stg in ViewBag.s)
+            {
+                string idName = "stg_" + stg.awst_master_id;
+                string className = "row_" + z.ToString();
+                <tr class='stg ui-widget-content' style="background-color: #eee">
+                    <td class="redips-rowhandler btn"><div class="redips-drag redips-row"></div></td>
+                    <td class="redips-mark"><button class='deletebtn'>Delete</button></td>
+                    <td class="stage @className" id="@idName">@stg.stg</td>
+
+                    @for (var i = 3; i < 8; i++)
+                    {
+                        <td>
+
+                            @foreach (var p1 in ViewBag.p)
+                            {
+
+                                if ((p1.rowid == stg.rowno) && (p1.colid == i))
+                                {
+                                    var j = 1;
+                                    <div class="redips-drag t3 btn nextstg@(p1.nextstg) @(p1.tdid)" id="cx@(p1.Id)">
+                                        @(p1.btn)
+
+
+
+
+                                    </div>
+
+
+                                }
+
+                            }
+                        </td>
+
+                    }
+
+                    <td style="display:none;"></td>
+                    <td style="display:none;"></td>
+                    <td style="display:none;"></td>
+                    <td style="display:none;"></td>
+                    <td style="display:none;"></td>
+
+                </tr>
+                z = z + 1;
+            }
+
+
+        </tbody>
+
+    </table>
+
+</div>
+<button id="save_all">Save Whole Table(Snapshot)</button><br />
+<button id="save_history">Save Workflow Template</button><br />
+<div><input type="radio" name="drop_option" class="checkbox" onclick="setMode(this)" value="multiple" title="Enabled dropping to already taken table cells" checked="true" /><span class="message_line">Enable dropping to already taken table cells</span></div>
+<div><input type="radio" name="drop_option" class="checkbox" onclick="setMode(this)" value="single" title="Disabled dropping to already taken table cells" /><span class="message_line">Disable dropping to already taken table cells</span></div>
+@using (Html.BeginForm("SaveTable_stage_button", "Home", FormMethod.Get, new { id = "saverefresh" }))
+{
+    <input type="hidden" id="savetable_stage_all" name="s" />
+    <input type="hidden"
+           id="savetable_btn_all" name="p" />
+    <input type="hidden"
+           id="savetable_ndoc" name="ndoc" />
+    <input type="hidden"
+           id="savetable_wkflow" name="wkflow" />
+
+
+
+}
+
+@using (Html.BeginForm("SaveTable_stage", "Home", FormMethod.Get, new { id = "savestage" }))
+{
+    <input type="hidden" id="savetable_stage" name="s" />
+}
+
+@using (Html.BeginForm("SaveTable_btn", "Home", FormMethod.Get, new { id = "savebtn" }))
+{
+    <input type="hidden"
+           id="savetable_btn" name="p" />
+}
+@using (Html.BeginForm("SaveTable_select", "Home", FormMethod.Get, new { id = "saveselect" }))
+{
+    <input type="hidden" name="tdid"
+           id="savetable_select_1" />
+    <input type="hidden" name="nextstg1"
+           id="savetable_select_2" />
+    <input type="hidden"
+           id="savetable_select_3" name="rowno1" />
+    <input type="hidden" name="colno1"
+           id="savetable_select_4" />
+    <input type="hidden" name="btntext"
+           id="savetable_select_5" />
+}
+@using (Html.BeginForm("Test", "Home", FormMethod.Get, new { id = "testbtn" }))
+{
+    <input type="hidden"
+           id="test_btn" name="p" />
+}
+
+@using (Html.BeginForm("Tables", "Home", FormMethod.Get, new { id = "ShowTables" }))
+{
+    <p>--------------------------------------------------------------------------</p>
+    <p>Select Table to show data</p>
+    <select name="s">
+        <option value="dbo.AW_master">dbo.AW_master</option>
+        <option value="dbo.AW_button_master">dbo.AW_button_master</option>
+        <option value="dbo.AW_button_detail">dbo.AW_button_detail</option>
+        <option value="dbo.AW_history_master">dbo.AW_history_master</option>
+        <option value="dbo.AW_history_detail">dbo.AW_history_detail</option>
+        <option value="dbo.AW_document_type">dbo.AW_document_type</option>
+        <option value="dbo.Group_Master">dbo.Group_Master</option>
+    </select>
+    <input type="submit" value="OK">
+    <input type="hidden"
+           name="ndoc" value="@(ViewBag.ndoc)" />
+    <input type="hidden"
+           name="wkflow" value="@(ViewBag.wkflow)" />
+}
+
+
+<p>--------------------------------------------------------------------------</p>
+<a href="/Home/Index">
+    Return to Index
+</a>

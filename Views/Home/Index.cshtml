@@ -1,0 +1,163 @@
+﻿<script type="text/javascript">
+        var doclist = '@(ViewBag.data_d)';
+    doclist = doclist.replace(/&nbsp;/g, ' ');
+    doclist = doclist.replace(/&lt;/g, '<');
+    doclist = doclist.replace(/&gt;/g, '>');
+
+    var tmpllist = '@(ViewBag.data_t)';
+    tmpllist = tmpllist.replace(/&nbsp;/g, ' ');
+    tmpllist = tmpllist.replace(/&lt;/g, '<');
+    tmpllist = tmpllist.replace(/&gt;/g, '>');
+</script>
+@{ 
+    var msg = TempData["msg"] ?? string.Empty;
+}
+<link rel="stylesheet" href="~/Content/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.9.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+<title>Workflow and Doc</title>
+<script type="text/javascript">
+    var message = '@msg';
+    if(message)
+        alert(message);
+</script>
+
+<script type="text/javascript">
+    $(document).on('click', "#create_tmpl_1", function () {
+
+
+        $("#dialog-form-1").dialog("open");
+
+    });
+    $(document).on('click', "#create_tmpl_2", function () {
+
+
+        $("#dialog-form-2").dialog("open");
+
+    });
+
+    $(document).on('click', "#load_tmpl", function () {
+
+
+        $("#dialog-form-3").dialog("open");
+
+    });
+
+    $(document).ready(function () {
+
+        $("#doclist_1").html(doclist);
+        $("#tmpllist_3").html(tmpllist);
+        $("#doclist_2").html(doclist);
+        $("#tmpllist_2").html(tmpllist);
+
+        $("#dialog-form-1").dialog({
+            autoOpen: false,
+            height: 400,
+            width: 400,
+            modal: true,
+            buttons: {
+                OK: function () {
+                    $("#pop_up_1").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#dialog-form-2").dialog({
+            autoOpen: false,
+            height: 400,
+            width: 400,
+            modal: true,
+            buttons: {
+                OK: function () {
+                    $("#pop_up_2").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#dialog-form-3").dialog({
+            autoOpen: false,
+            height: 400,
+            width: 400,
+            modal: true,
+            buttons: {
+                OK: function () {
+                    $("#pop_up_3").submit();
+                    $(this).dialog("close");
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+    });
+
+</script>
+
+<div id="dialog-form-1">
+    <form id='pop_up_1' action='/Home/new_wkflow_1' method='get'>
+
+        Workflow: <input type='text' name='wkflow' /><br />
+        Document Type:<span id="doclist_1"></span><br />
+
+    </form>
+
+</div>
+
+<div id="dialog-form-2">
+    <form id='pop_up_2' action='/Home/new_wkflow_2' method='get'>
+
+        Workflow: <input type='text' name='wkflow' /><br />
+        Template: <span id="tmpllist_2"></span><br />
+        Document Type:<span id="doclist_2"></span><br />
+    </form>
+
+</div>
+
+<div id="dialog-form-3">
+    <form id='pop_up_3' action='/Home/load_wkflow' method='get'>
+
+
+        Workflow: <span id="tmpllist_3"></span><br />
+
+    </form>
+
+</div>
+
+<div>
+    <input type="button" id="create_tmpl_1" value="Create Blank Workflow"><br />
+    <input type="button" id="create_tmpl_2" value="Create Workflow from Templates"><br />
+    <input type="button" id="load_tmpl" value="Load Workflow"><br />
+
+
+    @using (Html.BeginForm("Tables", "Home", FormMethod.Get, new { id = "ShowTables" }))
+    {
+        <p>--------------------------------------------------------------------------</p>
+        <p>Select Table to show data</p>
+        <select name="s">
+            <option value="dbo.AW_master">dbo.AW_master</option>
+            <option value="dbo.AW_button_master">dbo.AW_button_master</option>
+            <option value="dbo.AW_button_detail">dbo.AW_button_detail</option>
+            <option value="dbo.AW_history_master">dbo.AW_history_master</option>
+            <option value="dbo.AW_history_detail">dbo.AW_history_detail</option>
+            <option value="dbo.AW_document_type">dbo.AW_document_type</option>
+            <option value="dbo.Group_Master">dbo.Group_Master</option>
+        </select>
+        <input type="submit" value="OK">
+        <input type="hidden"
+               name="ndoc" value="-1" />
+        <input type="hidden"
+               name="wkflow" value="" />
+    }
+
+
+
+</div>
